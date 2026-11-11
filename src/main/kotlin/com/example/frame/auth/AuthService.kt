@@ -1,6 +1,8 @@
 package com.example.frame.auth
 
+import com.example.frame.user.User
 import com.example.frame.user.UserRepository
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Repository
@@ -32,6 +34,30 @@ class AuthService(
                 "Password must be at most 72 UTF-8 bytes"
             )
         }
+        
+        val user = User(
+            name = request.name.trim(),
+            email = email,
+            passwordHash = passwordEncoder.encode(request.password)!!
+        )
+        
+        val saveUser = try {
+            userRepository.saveAndFlush(user)
+        } catch (exception: DataIntegrityViolationException) {
+            if (userRepository.existsByEmail(email)) {
+                throw ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Email is already registered"
+                )
+            }
+            throw exception
+        }
+        
+        return SignupResponse(
+            id = checkNotNull(saveUser.id),
+            name = saveUser.name,
+            email = saveUser.email
+        )
         
     }
     

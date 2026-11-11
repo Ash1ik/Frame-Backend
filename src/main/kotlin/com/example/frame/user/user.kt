@@ -22,6 +22,6 @@ open class User(
     open var email: String,
     
     @field:Column(name = "password_hash", nullable = false)
-    open var password: String
+    open var passwordHash: String
     
 )
