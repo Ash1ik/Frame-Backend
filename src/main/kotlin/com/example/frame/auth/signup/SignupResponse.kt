@@ -1,4 +1,4 @@
-package com.example.frame.auth
+package com.example.frame.auth.signup
 
 data class SignupResponse(
     val id: Long,

@@ -1,11 +1,14 @@
 package com.example.frame.auth
 
+import com.example.frame.auth.login.LoginRequest
+import com.example.frame.auth.login.LoginResponse
+import com.example.frame.auth.signup.SignupRequest
+import com.example.frame.auth.signup.SignupResponse
 import com.example.frame.user.User
 import com.example.frame.user.UserRepository
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import java.util.Locale
@@ -60,5 +63,36 @@ class AuthService(
         )
         
     }
+
+    
+    fun login(request: LoginRequest): LoginResponse {
+        
+        val email = request.email.trim().lowercase(Locale.ROOT)
+        
+        val user = userRepository.findByEmail(email) ?: throw ResponseStatusException(
+                HttpStatus.UNAUTHORIZED,
+                "Invalid email or password"
+            )
+            
+        val passwordMatches = passwordEncoder.matches(
+            request.password,
+            user.passwordHash
+        )
+        
+        if (passwordMatches) {
+            return LoginResponse(
+                id = checkNotNull(user.id),
+                name = user.name,
+                email = user.email
+            )
+        } else {
+            throw ResponseStatusException(
+                HttpStatus.UNAUTHORIZED,
+                "Invalid email or password"
+            )
+        }
+    
+    }
+    
     
 }

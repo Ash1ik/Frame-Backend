@@ -1,4 +1,4 @@
-package com.example.frame.auth
+package com.example.frame.auth.signup
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank

@@ -1,5 +1,9 @@
 package com.example.frame.auth
 
+import com.example.frame.auth.login.LoginRequest
+import com.example.frame.auth.login.LoginResponse
+import com.example.frame.auth.signup.SignupRequest
+import com.example.frame.auth.signup.SignupResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PostMapping
@@ -20,6 +24,13 @@ class AuthController(
         @Valid @RequestBody request: SignupRequest
         ): SignupResponse {
         return authService.signup(request)
+    }
+    
+    @PostMapping("/login")
+    fun login(
+        @Valid @RequestBody request: LoginRequest
+    ): LoginResponse {
+        return authService.login(request)
     }
     
 }
