@@ -1,4 +1,4 @@
-package com.example.frame.auth
+package com.example.frame.service
 
 import com.example.frame.auth.login.LoginRequest
 import com.example.frame.auth.login.LoginResponse
@@ -6,6 +6,7 @@ import com.example.frame.auth.signup.SignupRequest
 import com.example.frame.auth.signup.SignupResponse
 import com.example.frame.user.User
 import com.example.frame.user.UserRepository
+import com.example.frame.service.TokenService
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -16,7 +17,8 @@ import java.util.Locale
 @Service
 class AuthService(
     private val userRepository: UserRepository,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
+    private val tokenService: TokenService
 ) {
     
     
@@ -80,10 +82,14 @@ class AuthService(
         )
         
         if (passwordMatches) {
+            val userId = checkNotNull(user.id)
+            val accessToken = tokenService.createAccessToken(userId)
+            
             return LoginResponse(
                 id = checkNotNull(user.id),
                 name = user.name,
-                email = user.email
+                email = user.email,
+                accessToken = accessToken
             )
         } else {
             throw ResponseStatusException(

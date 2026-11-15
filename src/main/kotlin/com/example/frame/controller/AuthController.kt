@@ -1,5 +1,6 @@
-package com.example.frame.auth
+package com.example.frame.controller
 
+import com.example.frame.service.AuthService
 import com.example.frame.auth.login.LoginRequest
 import com.example.frame.auth.login.LoginResponse
 import com.example.frame.auth.signup.SignupRequest
