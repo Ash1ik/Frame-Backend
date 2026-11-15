@@ -30,8 +30,16 @@ class SecurityConfig {
                 .requestMatchers(
                 HttpMethod.POST,
                 "/auth/signup", 
-                    "/auth/login"
+                    "/auth/login",
                 ).permitAll()
+                
+                .requestMatchers(
+        "/swagger-ui.html",
+                    "/swagger-ui/**",
+                    "/v3/api-docs",
+                    "/v3/api-docs/**"
+                ).permitAll()
+                
                 .requestMatchers(HttpMethod.GET, "/health").permitAll()
                 .anyRequest().authenticated()
         }
